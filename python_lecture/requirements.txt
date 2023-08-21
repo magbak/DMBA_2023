@@ -1,0 +1,3 @@
+#Assuming you have jupyter notebook..
+numpy
+pandas
