@@ -64,18 +64,39 @@ classroom
 
 # Exercises
 # After importing the library, the dataset is available in the gapminder-variable.
-install.packages("gapminder")
+#install.packages("gapminder")
 library("gapminder")
 gapminder
 
 # Exercises:
 # 1. Which country had the lowest life expectancy in the year you were born?
-# 2. Which continent had the lowest life expectancy in the year you were born?
-# 3. Count the number of countries in each continent. https://dplyr.tidyverse.org/reference/count.html
+gapminder %>% filter(year == 1987) %>% arrange(lifeExp)
+# 2. Which continent had the lowest average life expectancy in the year you were born?
+gapminder %>% 
+  filter(year == 1987) %>% 
+  group_by(continent) %>% 
+  summarise(meanLifeExp=mean(lifeExp)) %>% 
+  arrange(meanLifeExp)
+# 3. ADVANCED: Count the number of countries in each continent. https://dplyr.tidyverse.org/reference/count.html
+gapminder %>% 
+  group_by(continent, country) %>% 
+  summarise(n_countries=1) %>% 
+  summarise(n_countries=sum(n_countries))
+
 # 4. ADVANCED: Find the five most populous countries in the last year of the dataset. 
+last_year <- max(gapminder$year)
+gapminder %>% filter(year==last_year) %>% arrange(desc(pop))
 # Maybe use  https://dplyr.tidyverse.org/reference/row_number.html
 # 5. HARD: https://dplyr.tidyverse.org/reference/lead-lag.html
 # a. Which country had the largest positive change in life expectancy from one year to another?
+gapminder %>% 
+  mutate(last_lifeExp=lag(lifeExp), last_year=lag(year)) %>%
+  mutate(num_years_since_last=year-last_year) %>%
+  mutate(deltaLifeExp=(lifeExp-last_lifeExp)/(num_years_since_last)) %>%
+  arrange(desc(deltaLifeExp))
 # b. Which country had the largest positive change in life expectancy in a ten year period?
 # 6. Tidy the world_bank_pop dataset
+tidy_wb <- world_bank_pop %>% 
+  pivot_longer("2000":"2017", names_to="year") %>% 
+  pivot_wider(id_cols = c("country", "year"), names_from=indicator, values_from=value)
 # 7. ADVANCED: enrich the above dataset with https://github.com/lukes/ISO-3166-Countries-with-Regional-Codes/blob/master/all/all.csv
