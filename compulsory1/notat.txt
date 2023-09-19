@@ -1,0 +1,2 @@
+Trafikkindeks er hentet fra Tabell 7 fra:
+https://www.vegvesen.no/globalassets/fag/trafikk/trafikkdata/vegtrafikkindeksen_2023-05.pdf
